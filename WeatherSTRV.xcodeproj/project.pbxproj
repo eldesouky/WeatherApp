@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B7B16A31EF1B8070079F9ED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B7B16A21EF1B8070079F9ED /* GoogleService-Info.plist */; };
 		1BA78F371EF1B243004D180A /* ForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA78F291EF1B243004D180A /* ForecastViewController.swift */; };
 		1BA78F381EF1B243004D180A /* ForecastViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA78F2A1EF1B243004D180A /* ForecastViewController.xib */; };
 		1BA78F391EF1B243004D180A /* SingleDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA78F2B1EF1B243004D180A /* SingleDayViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B7B16A21EF1B8070079F9ED /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1BA78F291EF1B243004D180A /* ForecastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastViewController.swift; sourceTree = "<group>"; };
 		1BA78F2A1EF1B243004D180A /* ForecastViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForecastViewController.xib; sourceTree = "<group>"; };
 		1BA78F2B1EF1B243004D180A /* SingleDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleDayViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				1BA78F361EF1B243004D180A /* Views */,
 				1BC0B7681EF1867A00F0A75F /* AppDelegate.swift */,
 				1BC0B7741EF1867A00F0A75F /* Info.plist */,
+				1B7B16A21EF1B8070079F9ED /* GoogleService-Info.plist */,
 			);
 			path = WeatherSTRV;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				1BA78F3C1EF1B243004D180A /* LaunchScreen.storyboard in Resources */,
 				1BA78F3B1EF1B243004D180A /* Assets.xcassets in Resources */,
 				1BA78F3A1EF1B243004D180A /* SingleDayViewController.xib in Resources */,
+				1B7B16A31EF1B8070079F9ED /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
