@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eIV-7a-npb">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="08C-yJ-yvW">
+            <objects>
+                <tabBarController id="eIV-7a-npb" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="tpN-3B-OvL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="H3y-3r-1kE" kind="relationship" relationship="viewControllers" id="hza-cb-q6b"/>
+                        <segue destination="1Zq-Ll-BKv" kind="relationship" relationship="viewControllers" id="X8u-bd-pyS"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VXQ-yC-V8T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="902" y="-376"/>
+        </scene>
+        <!--Forecast View Controller-->
+        <scene sceneID="xlM-xr-P1M">
+            <objects>
+                <viewController id="xWq-Fj-yrg" customClass="ForecastViewController" customModule="WeatherSTRV" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="P2W-UF-nrT"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ers-A3-Iaj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1382" y="1117"/>
+        </scene>
+        <!--Today-->
+        <scene sceneID="uqn-QV-OGt">
+            <objects>
+                <navigationController id="H3y-3r-1kE" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Today" id="Cso-q2-Xo1"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Tqh-lS-UPG">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Wyi-pT-y8p" kind="relationship" relationship="rootViewController" id="4sJ-ga-Lre"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7e5-gO-e9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="265" y="380"/>
+        </scene>
+        <!--Forecast-->
+        <scene sceneID="PO5-Uv-hlX">
+            <objects>
+                <navigationController id="1Zq-Ll-BKv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Forecast" id="tJA-57-o6B"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XdN-RI-uuw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="xWq-Fj-yrg" kind="relationship" relationship="rootViewController" id="jPk-Uu-RPc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TDv-9F-aPV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1383" y="379"/>
+        </scene>
+        <!--Single Day View Controller-->
+        <scene sceneID="vF0-fH-F5o">
+            <objects>
+                <viewController id="Wyi-pT-y8p" customClass="SingleDayViewController" customModule="WeatherSTRV" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="eYA-An-FGO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jga-Xc-Au3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="265" y="1095"/>
+        </scene>
+    </scenes>
+</document>
