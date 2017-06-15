@@ -8,36 +8,66 @@
 
 import CoreLocation
 
+protocol LocationServiceDelegate: class {
+    func locationDidUpdate(location: CLLocation)
+}
+
 class LocationService: NSObject, CLLocationManagerDelegate {
     
-    let locationManager = CLLocationManager()
+    var locationManager: CLLocationManager!
     var locationUpdate:((CLLocation)->())?
+    weak var delegate: LocationServiceDelegate?
     
-    override init() {
+    init(delegate: LocationServiceDelegate) {
         
         super.init()
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        
+        self.delegate = delegate
     }
+    
+    // MARK: Location
+    /** Get the GPS location.  */
+    func getGPSLocation() {
+        setupLocationManager()
+        startLocationService()
+    }
+    
+    func setupLocationManager(){
+        if((locationManager) != nil)
+        {
+            locationManager.stopMonitoringSignificantLocationChanges()
+            locationManager.delegate = nil
+            locationManager = nil
+        }
+        
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+    }
+    
+    func startLocationService(){
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startMonitoringSignificantLocationChanges()
+    }
+    
     
     //MARK:- CLLocationManagerDelegate
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
-        if status == .authorizedAlways
+        if status != .authorizedAlways
         {
-            locationManager.startMonitoringSignificantLocationChanges()
+            locationManager.stopMonitoringSignificantLocationChanges()
             
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let lastLocation = locations.last {
-            locationUpdate?(lastLocation)
+      
+        if let location = locations.last {
+            let locValue:CLLocationCoordinate2D = manager.location!.coordinate
+            print("locations = \(locValue.latitude) \(locValue.longitude)")
+            //locationManager.stopMonitoringSignificantLocationChanges()
+            self.delegate?.locationDidUpdate(location: location)
         }
     }
-    
-    
-    
 }

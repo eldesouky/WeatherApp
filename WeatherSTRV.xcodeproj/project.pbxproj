@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B1C75601EF312D800A9607E /* ForecastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C755F1EF312D800A9607E /* ForecastModel.swift */; };
+		1B1C75621EF312F100A9607E /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C75611EF312F100A9607E /* BaseModel.swift */; };
 		1B7B16A31EF1B8070079F9ED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B7B16A21EF1B8070079F9ED /* GoogleService-Info.plist */; };
+		1B7B16A51EF1B8AF0079F9ED /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B16A41EF1B8AF0079F9ED /* WeatherService.swift */; };
+		1B7B16A71EF1B90A0079F9ED /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B16A61EF1B90A0079F9ED /* APIService.swift */; };
+		1B7B16A91EF1BCE60079F9ED /* ServicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B16A81EF1BCE60079F9ED /* ServicesManager.swift */; };
+		1B7B16AB1EF1C5BF0079F9ED /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B16AA1EF1C5BF0079F9ED /* WeatherModel.swift */; };
 		1BA78F371EF1B243004D180A /* ForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA78F291EF1B243004D180A /* ForecastViewController.swift */; };
 		1BA78F381EF1B243004D180A /* ForecastViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA78F2A1EF1B243004D180A /* ForecastViewController.xib */; };
 		1BA78F391EF1B243004D180A /* SingleDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA78F2B1EF1B243004D180A /* SingleDayViewController.swift */; };
@@ -21,7 +27,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B1C755F1EF312D800A9607E /* ForecastModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastModel.swift; sourceTree = "<group>"; };
+		1B1C75611EF312F100A9607E /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		1B7B16A21EF1B8070079F9ED /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1B7B16A41EF1B8AF0079F9ED /* WeatherService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		1B7B16A61EF1B90A0079F9ED /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		1B7B16A81EF1BCE60079F9ED /* ServicesManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServicesManager.swift; sourceTree = "<group>"; };
+		1B7B16AA1EF1C5BF0079F9ED /* WeatherModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		1BA78F291EF1B243004D180A /* ForecastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastViewController.swift; sourceTree = "<group>"; };
 		1BA78F2A1EF1B243004D180A /* ForecastViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForecastViewController.xib; sourceTree = "<group>"; };
 		1BA78F2B1EF1B243004D180A /* SingleDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleDayViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +76,9 @@
 		1BA78F2D1EF1B243004D180A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1B7B16AA1EF1C5BF0079F9ED /* WeatherModel.swift */,
+				1B1C755F1EF312D800A9607E /* ForecastModel.swift */,
+				1B1C75611EF312F100A9607E /* BaseModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -98,6 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				1BA78F351EF1B243004D180A /* LocationService.swift */,
+				1B7B16A41EF1B8AF0079F9ED /* WeatherService.swift */,
+				1B7B16A61EF1B90A0079F9ED /* APIService.swift */,
+				1B7B16A81EF1BCE60079F9ED /* ServicesManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -194,8 +212,8 @@
 				TargetAttributes = {
 					1BC0B7641EF1867A00F0A75F = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 4FWWLJ39J9;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = AXBRK75K78;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -286,9 +304,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B7B16A51EF1B8AF0079F9ED /* WeatherService.swift in Sources */,
 				1BC0B7691EF1867A00F0A75F /* AppDelegate.swift in Sources */,
 				1BA78F391EF1B243004D180A /* SingleDayViewController.swift in Sources */,
+				1B7B16A91EF1BCE60079F9ED /* ServicesManager.swift in Sources */,
+				1B1C75621EF312F100A9607E /* BaseModel.swift in Sources */,
+				1B1C75601EF312D800A9607E /* ForecastModel.swift in Sources */,
 				1BA78F3E1EF1B243004D180A /* LocationService.swift in Sources */,
+				1B7B16A71EF1B90A0079F9ED /* APIService.swift in Sources */,
+				1B7B16AB1EF1C5BF0079F9ED /* WeatherModel.swift in Sources */,
 				1BA78F371EF1B243004D180A /* ForecastViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -396,11 +420,14 @@
 			baseConfigurationReference = FCB744E116980FE1F27184DF /* Pods-WeatherSTRV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4FWWLJ39J9;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = AXBRK75K78;
 				INFOPLIST_FILE = WeatherSTRV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dos.WeatherSTRV;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "3d5b1270-5c42-4ced-9cb3-8144d253df4a";
+				PROVISIONING_PROFILE_SPECIFIER = "XC Ad Hoc: *";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -410,11 +437,14 @@
 			baseConfigurationReference = DBD6B06F0C43286FA571E011 /* Pods-WeatherSTRV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4FWWLJ39J9;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = AXBRK75K78;
 				INFOPLIST_FILE = WeatherSTRV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dos.WeatherSTRV;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "3d5b1270-5c42-4ced-9cb3-8144d253df4a";
+				PROVISIONING_PROFILE_SPECIFIER = "XC Ad Hoc: *";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
