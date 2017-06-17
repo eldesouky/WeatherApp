@@ -43,7 +43,7 @@ class WeatherService: NSObject {
         APIService.getWeatherDataForLocation(lat: lat, lon: lon) { (weather, success) in
             if success {
                 if let weather = weather {
-                    weather.setupDateForDay(number: 0) //day number 0 as it is today's weather
+                    weather.setDateForDay(number: 0) //day number 0 as it is today's weather
                     self.delegate?.weatherDidUpdate(weather: weather)
                     return
                 }
@@ -69,9 +69,9 @@ class WeatherService: NSObject {
     
     func setupForecastDates(forecastList: [WeatherModel]){
 
-        for index in 0...forecastList.count {
+        for index in 0...forecastList.count - 1 {
             let forecast = forecastList[index]
-            forecast.setupDateForDay(number: index)
+            forecast.setDateForDay(number: index)
         }
     }
 }

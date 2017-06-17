@@ -8,22 +8,14 @@
 
 import Foundation
 import ObjectMapper
-
-/*
- 
- icon, a string, holds the name of weather status. This names is supplied by OpenWeatherMap.
- For a list of possible values see Icon List: http://openweathermap.org/weather-conditions
- 
- temp => temperature in Kelvin.
- tempF and tempC are computed properties that return temp in Farenheit, and Celsius.
- 
- Note: tempMin, and tempMax are not as intersting as they sound, see the notes on these in
- the OpenWeatherMap API.
- */
+import FirebaseDatabase
 
 class WeatherModel: BaseModel {
+    
+    //MARK:- Variables
     var mainDescription: String?
     var icon: String?
+    var iconImage: UIImage!
     var tempratureF: Double?
     var pressure: Int?
     var speed: Float?
@@ -33,6 +25,8 @@ class WeatherModel: BaseModel {
     var city: String?
     var date: Date?
     var weekDay: String?
+    var latitude: Float?
+    var longitutde: Float?
     var rain: Float?{ //Incase didn't recieve rain object
         didSet{
             if rain == nil {
@@ -42,15 +36,42 @@ class WeatherModel: BaseModel {
     }
     var tempratureC: Int? { //From kelvin to Celcuis
         get {
-            if let temp = tempratureF {
-                return Int(temp - 273.15)
-            }
-            else {
-                return nil
-            }
+            return calculateCelciusTemperature()
         }
     }
     
+    //MARK:- Constants
+
+    /* icon variable, a string, holds the name of weather status. This names is supplied by OpenWeatherMap.
+     For a list of possible values see Icon List: http://openweathermap.org/weather-conditions
+     Not all cases are covered. Only given Assets
+     */
+    final var WeatherConditionImageMapper: [String: String] = [
+        
+        //clear sky
+        "01n": "Clear_Sky",
+        "01d": "Clear_Sky",
+        
+        //thunder, drizzle, rain, snow
+        "09d": "Thunder",
+        "09n": "Thunder",
+        "10d": "Thunder",
+        "10n": "Thunder",
+        "11d": "Thunder",
+        "11n": "Thunder",
+        "13d": "Thunder",
+        "13n": "Thunder",
+        
+        //cloud
+        "02n": "Cloudy_Big",
+        "02d": "Cloudy_Big",
+        "03n": "Cloudy_Big",
+        "03d": "Cloudy_Big",
+        "04n": "Cloudy_Big",
+        "04d": "Cloudy_Big",
+    ]
+
+    //MARK:- Object Map
     override func mapping(map: Map) {
         
         mainDescription = map["weather.0.main"].currentValue as? String
@@ -62,10 +83,66 @@ class WeatherModel: BaseModel {
         direction       = map["wind.deg"].currentValue as? Double
         cloud           = map["clouds.all"].currentValue as? Float
         country         = map["sys.country"].currentValue as? String
+        latitude        = map["coord.lat"].currentValue as? Float
+        longitutde       = map["coord.lon"].currentValue as? Float
         city            <- map["name"]
+        
+        setWeatherConditionIcon()
     }
-  
-    func windDirectionInGeographicalDirection() -> String {
+    
+    //MARK:- Storage
+    func addOrUpdateUserData(){
+        
+        let ref = Database.database().reference()
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        let usersReference = ref.child("device").child(deviceID)
+        var values: [String : Any] = [:]
+
+        //Geolocation and Temperature are related. Both should be updated in case of data change
+        if let lat = self.latitude {
+            if let lon = self.longitutde{
+                if let temp = self.tempratureC {
+                    values["Geolocation"] = ["lat":lat, "long":lon]
+                    values["temperature"] = temp
+                }
+                
+                //city is not always provided by OpenWeather APIs
+                if let city = self.city, city != ""{
+                    if let country = self.country{
+                        values["location"] = ["city":city, "country":country]
+                    }
+                }
+                else {
+                    values["location"] = ["city":"Unkowned", "country":"Unkowned"]
+                }
+            }
+        }
+        
+        //check if nothing to be written
+        if values.count < 1 {
+            return
+        }
+        
+        //write data
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            if let err = err {
+                print("Failed to write in DB: \(err)")
+                return
+            }
+        })
+    }
+    
+    //MARK:- View Helper Methods
+    func calculateCelciusTemperature() -> Int? {
+        if let temp = tempratureF {
+            return Int(temp - 273.15)
+        }
+        else {
+            return nil
+        }
+    }
+    
+    func getWindDirectionInGeographicalDirection() -> String {
         
         guard let direction = self.direction else {
             return "----"
@@ -93,7 +170,7 @@ class WeatherModel: BaseModel {
     }
     
     /* setup the forcast "date" variable to its corresponding date*/
-    func setupDateForDay(number: Int){
+    func setDateForDay(number: Int){
         var dayComponent = DateComponents()
         dayComponent.day = number
         let calender = NSCalendar.current
@@ -102,5 +179,23 @@ class WeatherModel: BaseModel {
         self.weekDay = correspondingDate?.dayOfWeek()
     }
     
-    
+    func setWeatherConditionIcon(){
+        
+        //Default image
+        let defaultImage = #imageLiteral(resourceName: "Sun_Big")
+        
+        //case no icon returned
+        guard let icon = icon else {
+            self.iconImage = defaultImage
+            return
+        }
+        
+        //case couldn't map image
+        guard let iconName = WeatherConditionImageMapper[icon] else {
+            self.iconImage = defaultImage
+            return
+        }
+        
+        self.iconImage = UIImage(named: iconName) ?? defaultImage
+    }
 }

@@ -11,3 +11,8 @@ import Foundation
 enum ViewIdentifier: String {
     case weatherPropertyView = "WeatherPropertyViewCell"
 }
+
+enum NotificationIdentifiers: String {
+    case weatherDidUpdate = "weatherDidUpdate"
+    case forecastDidUpdate = "forecastDidUpdate"
+}

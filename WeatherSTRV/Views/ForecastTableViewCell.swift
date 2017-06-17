@@ -15,7 +15,6 @@ class ForecastTableViewCell: UITableViewCell {
     @IBOutlet weak var forecastDescription: UILabel!
     @IBOutlet weak var forecastTemperature: UILabel!
     
-    
     var cellOwner: WeatherModel?{
         didSet{
             if let forecast = cellOwner {
@@ -32,6 +31,8 @@ class ForecastTableViewCell: UITableViewCell {
                 if let day = forecast.weekDay {
                     self.forecastDate.text = day
                 }
+                
+                self.forecastIcon.image = forecast.iconImage
             }
         }
     }

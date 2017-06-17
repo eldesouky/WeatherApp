@@ -45,6 +45,11 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     //MARK:- WeatherServiceDelegate
 
     func weatherDidUpdate(weather: WeatherModel) {
+        
+        if self.weatherData?.longitutde != weather.longitutde || self.weatherData?.latitude != weather.latitude || self.weatherData?.tempratureC != weather.tempratureC {
+            weather.addOrUpdateUserData()
+        }
+        
         self.weatherData = weather
         NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: weather)
     }
@@ -54,6 +59,10 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
         NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: forecastList)
     }
     
+    //MARK:- Services Request
+   
+    /*  When the shared manager recieves a data request it pass the saved weather instance if found, else it fetches weather for location if found, else it fetches the location to then fetch the weather for this location and post a notification via Notification Center
+     */
     func requstWeatherData(completion: (_ weather: WeatherModel) -> ()){
         if let weather = self.weatherData {
             completion(weather)
@@ -88,10 +97,3 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     }
     
 }
-
-enum NotificationIdentifiers: String {
-    case weatherDidUpdate = "weatherDidUpdate"
-    case forecastDidUpdate = "forecastDidUpdate"
-}
-
-

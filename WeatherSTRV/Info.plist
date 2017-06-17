@@ -12,9 +12,11 @@
 	<key>CFBundleDisplayName</key>
 	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>locationn</string>
+	<string>The app needs to use your current location to provide you with the weather</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>location use plz</string>
+	<string>The app needs to use the location to provide you with the weather</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app needs to access your photos to store the saved screen shots</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>NSAppTransportSecurity</key>

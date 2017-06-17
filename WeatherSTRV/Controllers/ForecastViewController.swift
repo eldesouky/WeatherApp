@@ -10,10 +10,13 @@ import UIKit
 
 class ForecastViewController: UIViewController {
 
+    //MARK:- IBOutlets
     @IBOutlet weak var tableView: UITableView!
     
+    //MARK:- Adapter
     var forecastTableAdapter: ForecastTableAdapter!
     
+    //MARK:- Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,27 +26,37 @@ class ForecastViewController: UIViewController {
         self.title = "Forecast"
         self.navigationController?.navigationBar.isTranslucent = false
         self.tabBarController?.tabBar.isTranslucent = false
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        addServiceObserver()
         ServicesManager.shared.requstForecastData { (forcastList) in
-            
-            print("forcast: " +  (forcastList.first?.mainDescription)!  + "<,,,,>")
             
             forecastTableAdapter.reloadTableWith(forecastList: forcastList)
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(ForecastViewController.forecastDidUpdate(notification:)), name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: nil)
-
+    override func viewDidDisappear(_ animated: Bool) {
+        removeServiceObserver()
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: nil)
+    //MARK:- Notification Center
+    
+    func addServiceObserver(){
+        NotificationCenter.default.addObserver(self, selector: #selector(ForecastViewController.forecastDidUpdate(notification:)), name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: nil)
+        
     }
+    
+    func removeServiceObserver(){
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: nil)
+        
+    }
+
     
     func forecastDidUpdate(notification: Notification){
         

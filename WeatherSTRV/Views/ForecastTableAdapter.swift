@@ -70,7 +70,7 @@ class ForecastTableAdapter: NSObject, UITableViewDelegate, UITableViewDataSource
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return 92
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

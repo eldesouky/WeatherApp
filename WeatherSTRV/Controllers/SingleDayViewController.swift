@@ -16,10 +16,12 @@ class SingleDayViewController: UIViewController {
     @IBOutlet weak var todayWeatherLocationIcon: UIImageView!
     
     @IBOutlet weak var todayWeatherLocationLabel: UILabel!
-    
     @IBOutlet weak var todayWeatherTemperatureLabel: UILabel!
-    
     @IBOutlet weak var todayWeatherDescriptionLabel: UILabel!
+    
+    @IBOutlet weak var currentLocationView: UIView!
+    
+    @IBOutlet weak var currentLocationView_heightConstraint: NSLayoutConstraint!
     
     //MARK: Properties View
     @IBOutlet weak var crPropertyView: UIView!
@@ -34,12 +36,12 @@ class SingleDayViewController: UIViewController {
     @IBOutlet weak var windPropertyLabel: UILabel!
     @IBOutlet weak var pressurePropertyLabel: UILabel!
     
+    //MARK:- Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        
         self.title = "Today"
         self.navigationController?.navigationBar.isTranslucent = false
         self.tabBarController?.tabBar.isTranslucent = false
@@ -47,24 +49,14 @@ class SingleDayViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(SingleDayViewController.weatherDidUpdate(notification:)), name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
-        
-
+        addServiceObserver()
+        ServicesManager.shared.requstWeatherData{ (weather) in
+            self.setupDataFor(weather: weather)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
-    }
-    
-    func weatherDidUpdate(notification: Notification){
-
-        if let weather = notification.object as? WeatherModel {
-            
-            setupDataFor(weather: weather)
-            
-            
-        }
+        removeServiceObserver()
     }
     
     override func didReceiveMemoryWarning() {
@@ -72,16 +64,41 @@ class SingleDayViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //MARK:- Notification Center
+    
+    func addServiceObserver(){
+        NotificationCenter.default.addObserver(self, selector: #selector(SingleDayViewController.weatherDidUpdate(notification:)), name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
+        
+    }
+    
+    func removeServiceObserver(){
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
+
+    }
+    
+    func weatherDidUpdate(notification: Notification){
+
+        if let weather = notification.object as? WeatherModel {
+            setupDataFor(weather: weather)
+        }
+    }
+    
     func setupDataFor(weather: WeatherModel){
      
         DispatchQueue.main.async { [unowned self] in
                         
-            if let city = weather.city {
+            if let city = weather.city, city != "" {
                 var location = city
                 if let country = weather.country {
                     location = location + ", " + country
                 }
                 self.todayWeatherLocationLabel.text = location
+                self.currentLocationView_heightConstraint.constant = 20
+                self.todayWeatherLocationIcon.isHidden = false
+            }
+            else {
+                self.currentLocationView_heightConstraint.constant = 0
+                self.todayWeatherLocationIcon.isHidden = true
             }
             
             if let temp = weather.tempratureC {
@@ -108,22 +125,45 @@ class SingleDayViewController: UIViewController {
                 self.rainPropertyLabel.text = "\(rain.format(f: ".1")) mm"
             }
             
-            self.compassPropertyLabel.text = weather.windDirectionInGeographicalDirection()
-            
-        }
-        
+            self.compassPropertyLabel.text = weather.getWindDirectionInGeographicalDirection()
+            self.todayWeatherIcon.image = weather.iconImage
 
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //MARK:- IBActions
+    @IBAction func shareButtonIsClicked(sender:UIButton){
+        showSharingActivity()
     }
-    */
+    
+    //MARK:- Share
+    
+    func showSharingActivity(){
+        
+        let activityViewController = UIActivityViewController(activityItems: [self.getSharablePhoto()], applicationActivities: nil)
+        
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        
+        // present the view controller
+        DispatchQueue.main.async { [weak self] in
+            self?.present(activityViewController, animated: true, completion: nil)
+            
+        }
+    }
+    
+    func getSharablePhoto()->UIImage
+    {
+        let renderer = UIGraphicsImageRenderer(size: self.view.bounds.size)
+        let image = renderer.image { ctx in
+            self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+        }
+        return image
+    }
+    //MARK: UIActivityItemSource
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
+        
+        return getSharablePhoto()
+    }
 
 }
