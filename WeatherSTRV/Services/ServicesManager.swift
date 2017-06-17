@@ -19,6 +19,10 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     var locationService: LocationService!
     var weatherService: WeatherService!
     
+    private var weatherData: WeatherModel?
+    private var forecastData: [WeatherModel]?
+    private var currentLocation: CLLocation?
+    
      override init() { //This prevents others from using the default '()' initializer for this class.
         super.init()
         self.locationService = LocationService(delegate: self)
@@ -31,19 +35,63 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
         
     }
     
+    //MARK:- WeatherServiceDelegate
+    
     func locationDidUpdate(location: CLLocation){
-        self.weatherService.getWeatherForLocation(location: location)
+        self.weatherService.getWeatherServicesForLocation(location: location)
     }
     
-    func weatherDidUpdate(weather: WeatherModel) {
-        NotificationCenter.default.post(name: Notification.Name("weatherDidUpdate"), object: weather)
-    }
     
-    func forecastDidUpdate(weather: WeatherModel) {
-        
-    }
+    //MARK:- WeatherServiceDelegate
 
+    func weatherDidUpdate(weather: WeatherModel) {
+        self.weatherData = weather
+        NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: weather)
+    }
     
+    func forecastDidUpdate(forecastList: [WeatherModel]) {
+        self.forecastData = forecastList
+        NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: forecastList)
+    }
+    
+    func requstWeatherData(completion: (_ weather: WeatherModel) -> ()){
+        if let weather = self.weatherData {
+            completion(weather)
+        }
+        else {
+            if let location = currentLocation {
+                let lat: Float = Float(location.coordinate.latitude)
+                let lon: Float = Float(location.coordinate.longitude)
+                self.weatherService.getDetailedWeatherForLocation(lat: lat, lon: lon)
+            }
+            else {
+                self.locationService.getGPSLocation()
+            }
+        }
+    }
+    
+    func requstForecastData(completion: (_ forecastList: [WeatherModel]) -> ()){
+        if let forecastList = self.forecastData {
+            completion(forecastList)
+        }
+        else {
+            if let location = currentLocation {
+                let lat: Float = Float(location.coordinate.latitude)
+                let lon: Float = Float(location.coordinate.longitude)
+                self.weatherService.getForecastForLocation(lat: lat, lon: lon, daysCount: 7)
+            }
+            else {
+                self.locationService.getGPSLocation()
+            }
+        }
+
+    }
+    
+}
+
+enum NotificationIdentifiers: String {
+    case weatherDidUpdate = "weatherDidUpdate"
+    case forecastDidUpdate = "forecastDidUpdate"
 }
 
 

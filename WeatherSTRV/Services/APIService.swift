@@ -15,22 +15,17 @@ import ObjectMapper
 
 class APIService: NSObject {
     
-    // MARK:- Server Routes
-    static let WindServiceAppId        :String         = "b9a606bcf58b96058b40c4f645d0a568"
+    // MARK:- API Props
+    static let WeatherServiceAppId        :String         = "b9a606bcf58b96058b40c4f645d0a568"
     static let baseURL          :String         = "http://api.openweathermap.org/data/2.5/"
-    static let defaultImageURL  :String         = ""
-    
     fileprivate static let alamoFireManager  = Alamofire.SessionManager.default
     
     
-    // Put together a URL With lat and lon
-    let path = "weather?lat=51.51&lon=-0.13&cnt=7&appid=b9a606bcf58b96058b40c4f645d0a568"
-    
 
+    // MARK:- Weather API Services
     static func getWeatherDataForLocation(lat: Float, lon: Float, completion: @escaping (_ weather: WeatherModel?, _ success: Bool) -> ()){
-        
-        
-        let url = baseURL + "weather?" + "lat=\(lat)&lon=\(lon)" + "&appid=\(WindServiceAppId)"
+    
+        let url = baseURL + "weather?" + "lat=\(lat)&lon=\(lon)" + "&appid=\(WeatherServiceAppId)"
         APIService.sendRequest(.get, url: url) { (result, message, success) in
             
             if success {
@@ -45,6 +40,28 @@ class APIService: NSObject {
             }
         }
     }
+    
+    static func getForecastDataForLocation(lat: Float, lon: Float, daysCount count: Int, completion: @escaping (_ forecast: [WeatherModel]?, _ success: Bool) -> ()){
+        
+        let url = baseURL + "forecast?" + "lat=\(lat)&lon=\(lon)" + "&cnt=\(count)" + "&appid=\(WeatherServiceAppId)"
+        
+        APIService.sendRequest(.get, url: url) { (result, message, success) in
+            
+            if success {
+                if let forecastList = Mapper<ForecastListModel>().map(JSONString: result!)
+                {
+                    print((forecastList.records?.first?.mainDescription)! + "=======lat=\(lat)&lon=\(lon)")
+                    completion(forecastList.records, true)
+                    return
+                }
+                
+                //failed to fetch forecast
+                completion(nil, false)
+            }
+        }
+    }
+    
+    // MARK:- BASE API Connection
     
     private static func sendRequest(_ method:HTTPMethod, url:String, completion: @escaping (_ result: String?, _ message:String?, _ success:Bool)->()) {
         

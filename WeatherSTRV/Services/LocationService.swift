@@ -8,10 +8,6 @@
 
 import CoreLocation
 
-protocol LocationServiceDelegate: class {
-    func locationDidUpdate(location: CLLocation)
-}
-
 class LocationService: NSObject, CLLocationManagerDelegate {
     
     var locationManager: CLLocationManager!
@@ -46,9 +42,9 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     func startLocationService(){
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         locationManager.startMonitoringSignificantLocationChanges()
     }
-    
     
     //MARK:- CLLocationManagerDelegate
     
@@ -57,15 +53,13 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         if status != .authorizedAlways
         {
             locationManager.stopMonitoringSignificantLocationChanges()
-            
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
       
-        if let location = locations.last {
-            let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-            print("locations = \(locValue.latitude) \(locValue.longitude)")
+        if let location = manager.location {
+            print("locations = \(location.coordinate.latitude) \(location.coordinate.longitude)")
             //locationManager.stopMonitoringSignificantLocationChanges()
             self.delegate?.locationDidUpdate(location: location)
         }

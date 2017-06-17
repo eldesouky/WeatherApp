@@ -41,8 +41,14 @@
         <scene sceneID="uqn-QV-OGt">
             <objects>
                 <navigationController id="H3y-3r-1kE" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Today" id="Cso-q2-Xo1"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Tqh-lS-UPG">
+                    <tabBarItem key="tabBarItem" title="Today" image="Today" id="Cso-q2-Xo1">
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="selectedImageTintColor">
+                                <color key="value" red="0.4048808217" green="0.68980628249999998" blue="0.16840498149999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </tabBarItem>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Tqh-lS-UPG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -58,8 +64,10 @@
         <scene sceneID="PO5-Uv-hlX">
             <objects>
                 <navigationController id="1Zq-Ll-BKv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Forecast" id="tJA-57-o6B"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XdN-RI-uuw">
+                    <tabBarItem key="tabBarItem" title="Forecast" image="Forecast_Blue" id="tJA-57-o6B">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XdN-RI-uuw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -82,4 +90,8 @@
             <point key="canvasLocation" x="265" y="1095"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Forecast_Blue" width="22" height="22"/>
+        <image name="Today" width="24" height="24"/>
+    </resources>
 </document>

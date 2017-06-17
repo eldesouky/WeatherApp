@@ -16,4 +16,8 @@ target 'WeatherSTRV' do
     pod 'AlamofireObjectMapper', '~> 4.0'
     pod 'ObjectMapper', '~> 2.2'
     
+    # EmptyDataSet
+    pod 'DZNEmptyDataSet', '~> 1.8.1'
+
+    
 end

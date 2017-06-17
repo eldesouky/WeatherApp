@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ForecastViewController" customModule="WeatherSTRV" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="LQs-h6-kJc" id="eE9-aG-8gj"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,7 +19,31 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HorizontalLine" translatesAutoresizingMaskIntoConstraints="NO" id="ab5-z9-JHZ">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="LzZ-tx-ahk"/>
+                    </constraints>
+                </imageView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LQs-h6-kJc">
+                    <rect key="frame" x="0.0" y="2" width="375" height="665"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
             <color key="backgroundColor" red="0.96078431369999995" green="0.96078431369999995" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="LQs-h6-kJc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1Fn-tu-2Kb"/>
+                <constraint firstAttribute="bottom" secondItem="LQs-h6-kJc" secondAttribute="bottom" id="OOK-yW-aGQ"/>
+                <constraint firstAttribute="trailing" secondItem="ab5-z9-JHZ" secondAttribute="trailing" id="OiR-dY-D3r"/>
+                <constraint firstItem="LQs-h6-kJc" firstAttribute="top" secondItem="ab5-z9-JHZ" secondAttribute="bottom" id="UZD-zm-FtA"/>
+                <constraint firstAttribute="trailing" secondItem="LQs-h6-kJc" secondAttribute="trailing" id="hVk-j0-sZF"/>
+                <constraint firstItem="ab5-z9-JHZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uTJ-k9-gzt"/>
+                <constraint firstItem="ab5-z9-JHZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="zUg-KF-AgF"/>
+            </constraints>
         </view>
     </objects>
+    <resources>
+        <image name="HorizontalLine" width="1242" height="6"/>
+    </resources>
 </document>
