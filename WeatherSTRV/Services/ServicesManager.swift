@@ -16,7 +16,6 @@ import CoreLocation
 
 // MARK:- ServicesManagerSubscriberDelegate
 protocol ServicesManagerSubscriberDelegate {
-    var subscribedServices: [(NotificationIdentifiers, Selector)] { get set }
     func Observe(services: [(NotificationIdentifiers, Selector)])
     func unObserve(services: [(NotificationIdentifiers, Selector)])
 }
