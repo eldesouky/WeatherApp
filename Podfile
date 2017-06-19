@@ -7,7 +7,22 @@ target 'WeatherSTRV' do
 
   # Pods for WeatherSTRV
 
+    #Firebase
 	pod 'Firebase/Core',  '~> 4.0'
    	pod 'Firebase/Database',  '~> 4.0'
+   
+   #Alamofire & Object Mapper
+    pod 'Alamofire', '~> 4.0'
+    pod 'AlamofireObjectMapper', '~> 4.0'
+    pod 'ObjectMapper', '~> 2.2'
+    
+    # EmptyDataSet
+    pod 'DZNEmptyDataSet', '~> 1.8'
 
+    # Header Message for reachability
+    pod 'SwiftMessages', '~> 3.3'
+    
+    pod 'ReachabilitySwift', '~> 3'
+
+    
 end
