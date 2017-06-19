@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tab Bar Controller-->
+        <!--Base Tabbar Controller-->
         <scene sceneID="08C-yJ-yvW">
             <objects>
-                <tabBarController id="eIV-7a-npb" sceneMemberID="viewController">
+                <tabBarController id="eIV-7a-npb" customClass="BaseTabbarController" customModule="WeatherSTRV" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="tpN-3B-OvL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -48,7 +48,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </tabBarItem>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Tqh-lS-UPG">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Tqh-lS-UPG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -64,10 +64,10 @@
         <scene sceneID="PO5-Uv-hlX">
             <objects>
                 <navigationController id="1Zq-Ll-BKv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Forecast" image="Forecast_Blue" id="tJA-57-o6B">
+                    <tabBarItem key="tabBarItem" title="Forecast" image="Forecast_Dark" id="tJA-57-o6B">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XdN-RI-uuw">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XdN-RI-uuw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -91,7 +91,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Forecast_Blue" width="22" height="22"/>
+        <image name="Forecast_Dark" width="22" height="22"/>
         <image name="Today" width="24" height="24"/>
     </resources>
 </document>

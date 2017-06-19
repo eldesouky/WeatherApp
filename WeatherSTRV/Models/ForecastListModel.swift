@@ -17,5 +17,24 @@ class ForecastListModel: BaseModel {
         records <- map["list"]
     }
 
+    //MARK:- Data Caching
+    //MARK: Store
+    static func cacheForecast(forecastList: [WeatherModel]) {
+        BaseModel.store(forecastList, withKey: "forecast")
+    }
     
+    //MARK: Retreive
+    static func getCachedForecast() -> [WeatherModel]? {
+        return ForecastListModel.getStoredObjects(forKey: "forecast")
+    }
+    
+    //MARK:- Array Storage
+    static func getStoredObjects(forKey key:String) -> [WeatherModel]? {
+        let userDefaults = UserDefaults.standard
+        if let session = userDefaults.data(forKey: key), let currentSession = NSKeyedUnarchiver.unarchiveObject(with: session) as? [WeatherModel] {
+            return currentSession
+        }
+        return nil
+    }
+
 }

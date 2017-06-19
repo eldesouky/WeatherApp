@@ -8,19 +8,17 @@
 
 import UIKit
 
-class SingleDayViewController: UIViewController {
+
+class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDelegate, ServicesManagerWeatherDelegate{
 
     //MARK:- IBOutlets
     //MARK: Header View
     @IBOutlet weak var todayWeatherIcon: UIImageView!
     @IBOutlet weak var todayWeatherLocationIcon: UIImageView!
-    
     @IBOutlet weak var todayWeatherLocationLabel: UILabel!
     @IBOutlet weak var todayWeatherTemperatureLabel: UILabel!
     @IBOutlet weak var todayWeatherDescriptionLabel: UILabel!
-    
     @IBOutlet weak var currentLocationView: UIView!
-    
     @IBOutlet weak var currentLocationView_heightConstraint: NSLayoutConstraint!
     
     //MARK: Properties View
@@ -29,34 +27,36 @@ class SingleDayViewController: UIViewController {
     @IBOutlet weak var pressurePropertyView: UIView!
     @IBOutlet weak var windPropertyView: UIView!
     @IBOutlet weak var compassPropertyView: UIView!
-    
     @IBOutlet weak var crPropertyLabel: UILabel!
     @IBOutlet weak var rainPropertyLabel: UILabel!
     @IBOutlet weak var compassPropertyLabel: UILabel!
     @IBOutlet weak var windPropertyLabel: UILabel!
     @IBOutlet weak var pressurePropertyLabel: UILabel!
     
+    //MARK: Share View
+    @IBOutlet weak var shareButton: UIButton!
+    
+    //MARK:-Variables
+    var subscribedServices = [
+        (NotificationIdentifiers.weatherDidUpdate, #selector(SingleDayViewController.weatherDidUpdate(notification:)))
+    ]
+    
     //MARK:- Life Cycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         self.title = "Today"
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.tabBarController?.tabBar.isTranslucent = false
-        
+                
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        addServiceObserver()
-        ServicesManager.shared.requstWeatherData{ (weather) in
-            self.setupDataFor(weather: weather)
-        }
+        Observe(services: subscribedServices)
+        requestWeatherData()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        removeServiceObserver()
+        unObserve(services: subscribedServices)
     }
     
     override func didReceiveMemoryWarning() {
@@ -64,105 +64,114 @@ class SingleDayViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    //MARK:- Notification Center
-    
-    func addServiceObserver(){
-        NotificationCenter.default.addObserver(self, selector: #selector(SingleDayViewController.weatherDidUpdate(notification:)), name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
-        
+    //MARK:- Data
+    func requestWeatherData(){
+        ServicesManager.shared.requstWeatherData{ (weather) in
+            self.setupDataFor(weather: weather)
+        }
     }
     
-    func removeServiceObserver(){
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: nil)
-
+    //MARK:- ServicesManagerSubscriberDelegate
+    func Observe(services: [(NotificationIdentifiers, Selector)]) {
+        self.addObserversFor(services: services)
     }
     
+    func unObserve(services: [(NotificationIdentifiers, Selector)]){
+        self.removeObserversFor(services: subscribedServices)
+    }
+    
+    //MARK:- ServicesManagerWeatherDelegate
     func weatherDidUpdate(notification: Notification){
-
         if let weather = notification.object as? WeatherModel {
             setupDataFor(weather: weather)
         }
     }
     
+    //MARK:- Actions
+    @IBAction func shareButtonIsClicked(sender:UIButton){
+        DispatchQueue.main.async { [weak self] in
+            self?.shareButton.loadingIndicator(show: true)
+        }
+        //showSharingActivity()
+    }
+    
     func setupDataFor(weather: WeatherModel){
-     
-        DispatchQueue.main.async { [unowned self] in
-                        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let weakSelf = self else {
+                return
+            }
+            
             if let city = weather.city, city != "" {
                 var location = city
                 if let country = weather.country {
                     location = location + ", " + country
                 }
-                self.todayWeatherLocationLabel.text = location
-                self.currentLocationView_heightConstraint.constant = 20
-                self.todayWeatherLocationIcon.isHidden = false
+                weakSelf.todayWeatherLocationLabel.text = location
+                weakSelf.currentLocationView_heightConstraint.constant = 20
+                weakSelf.todayWeatherLocationIcon.isHidden = false
             }
             else {
-                self.currentLocationView_heightConstraint.constant = 0
-                self.todayWeatherLocationIcon.isHidden = true
+                weakSelf.currentLocationView_heightConstraint.constant = 0
+                weakSelf.todayWeatherLocationIcon.isHidden = true
             }
             
             if let temp = weather.tempratureC {
-                self.todayWeatherTemperatureLabel.text = "\(temp)°C"
+                weakSelf.todayWeatherTemperatureLabel.text = "\(temp)°C"
             }
-
+            
             if let description = weather.mainDescription {
-                self.todayWeatherDescriptionLabel.text = String(describing: description)
+                weakSelf.todayWeatherDescriptionLabel.text = String(describing: description)
             }
-
+            
             if let pressure = weather.pressure {
-                self.pressurePropertyLabel.text = "\(pressure) hPa"
+                weakSelf.pressurePropertyLabel.text = "\(pressure) hPa"
             }
             
             if let wind = weather.speed {
-                self.windPropertyLabel.text = "\(wind) km/h"
+                weakSelf.windPropertyLabel.text = "\(wind) km/h"
             }
             
             if let cloud = weather.cloud {
-                self.crPropertyLabel.text = "\(Int(cloud))%"
+                weakSelf.crPropertyLabel.text = "\(Int(cloud))%"
             }
             
             if let rain = weather.rain {
-                self.rainPropertyLabel.text = "\(rain.format(f: ".1")) mm"
+                weakSelf.rainPropertyLabel.text = "\(rain.format(f: ".1")) mm"
             }
             
-            self.compassPropertyLabel.text = weather.getWindDirectionInGeographicalDirection()
-            self.todayWeatherIcon.image = weather.iconImage
-
+            weakSelf.compassPropertyLabel.text = weather.getWindDirectionInGeographicalDirection()
+            weakSelf.todayWeatherIcon.image = weather.iconImage
         }
     }
     
-    //MARK:- IBActions
-    @IBAction func shareButtonIsClicked(sender:UIButton){
-        showSharingActivity()
-    }
-    
     //MARK:- Share
-    
     func showSharingActivity(){
-        
+
         let activityViewController = UIActivityViewController(activityItems: [self.getSharablePhoto()], applicationActivities: nil)
-        
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // present the view controller
         DispatchQueue.main.async { [weak self] in
+            self?.shareButton.loadingIndicator(show: false)
             self?.present(activityViewController, animated: true, completion: nil)
-            
         }
     }
     
-    func getSharablePhoto()->UIImage
-    {
-        let renderer = UIGraphicsImageRenderer(size: self.view.bounds.size)
+    func getSharablePhoto()->UIImage{
+        self.shareButton.isHidden = true //Remove share button from screenshot
+        let screenSize = UIScreen.main.bounds.size
+        let renderer = UIGraphicsImageRenderer(size: screenSize)
+
         let image = renderer.image { ctx in
             self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
         }
+        self.shareButton.isHidden = false
         return image
     }
+    
     //MARK: UIActivityItemSource
-
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
-        
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any?{
         return getSharablePhoto()
     }
 

@@ -19,5 +19,4 @@ target 'WeatherSTRV' do
     # EmptyDataSet
     pod 'DZNEmptyDataSet', '~> 1.8.1'
 
-    
 end

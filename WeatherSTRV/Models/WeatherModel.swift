@@ -15,7 +15,6 @@ class WeatherModel: BaseModel {
     //MARK:- Variables
     var mainDescription: String?
     var icon: String?
-    var iconImage: UIImage!
     var tempratureF: Double?
     var pressure: Int?
     var speed: Float?
@@ -24,9 +23,13 @@ class WeatherModel: BaseModel {
     var country: String?
     var city: String?
     var date: Date?
-    var weekDay: String?
     var latitude: Float?
     var longitutde: Float?
+    var iconImage: UIImage!{
+        get {
+            return getWeatherConditionIcon()
+        }
+    }
     var rain: Float?{ //Incase didn't recieve rain object
         didSet{
             if rain == nil {
@@ -39,7 +42,13 @@ class WeatherModel: BaseModel {
             return calculateCelciusTemperature()
         }
     }
-    
+    var weekDay: String?{
+        get {
+            return getDayOfWeek()
+        }
+        set{}
+    }
+
     //MARK:- Constants
 
     /* icon variable, a string, holds the name of weather status. This names is supplied by OpenWeatherMap.
@@ -49,8 +58,8 @@ class WeatherModel: BaseModel {
     final var WeatherConditionImageMapper: [String: String] = [
         
         //clear sky
-        "01n": "Clear_Sky",
-        "01d": "Clear_Sky",
+        "01n": "Sun",
+        "01d": "Sun",
         
         //thunder, drizzle, rain, snow
         "09d": "Thunder",
@@ -63,12 +72,12 @@ class WeatherModel: BaseModel {
         "13n": "Thunder",
         
         //cloud
-        "02n": "Cloudy_Big",
-        "02d": "Cloudy_Big",
-        "03n": "Cloudy_Big",
-        "03d": "Cloudy_Big",
-        "04n": "Cloudy_Big",
-        "04d": "Cloudy_Big",
+        "02n": "Cloudy_Sky",
+        "02d": "Cloudy_Sky",
+        "03n": "Cloudy_Sky",
+        "03d": "Cloudy_Sky",
+        "04n": "Cloudy_Sky",
+        "04d": "Cloudy_Sky",
     ]
 
     //MARK:- Object Map
@@ -86,13 +95,106 @@ class WeatherModel: BaseModel {
         latitude        = map["coord.lat"].currentValue as? Float
         longitutde       = map["coord.lon"].currentValue as? Float
         city            <- map["name"]
-        
-        setWeatherConditionIcon()
+    }
+   
+    
+    //MARK:- Data Caching
+    //MARK: Store
+    func cacheWeather() {
+        BaseModel.store(self, withKey: "weather")
     }
     
-    //MARK:- Storage
-    func addOrUpdateUserData(){
+    //MARK: Retreive
+    static func getCachedWeather() -> WeatherModel? {
+        return BaseModel.getStoredObject(forKey: "weather") as? WeatherModel
+    }
+    
+    //MARK: Encode
+    override func encodeData(with aCoder: NSCoder) {
         
+        super.encodeData(with: aCoder)
+        aCoder.encode(self.mainDescription, forKey:"weather_description")
+        aCoder.encode(self.icon           , forKey:"weather_icon")
+        aCoder.encode(self.tempratureF    , forKey:"weather_tempratureF")
+        aCoder.encode(self.pressure       , forKey:"weather_pressure")
+        aCoder.encode(self.rain           , forKey:"weather_rain")
+        aCoder.encode(self.speed          , forKey:"weather_speed")
+        aCoder.encode(self.direction      , forKey:"weather_direction")
+        aCoder.encode(self.cloud          , forKey:"weather_cloud")
+        aCoder.encode(self.country        , forKey:"weather_country")
+        aCoder.encode(self.latitude       , forKey:"weather_latitude")
+        aCoder.encode(self.longitutde     , forKey:"weather_longitutde")
+        aCoder.encode(self.city           , forKey:"weather_city")
+        aCoder.encode(self.date           , forKey:"weather_date")
+        aCoder.encode(self.weekDay        , forKey:"weather_weekDay")
+
+        
+    }
+    
+    //MARK: Decode
+    override func decodeData(coder aDecoder: NSCoder) {
+        super.decodeData(coder: aDecoder)
+        
+        if let mainDescription  =  aDecoder.decodeObject(forKey:"weather_description") as? String? {
+            self.mainDescription = mainDescription
+        }
+        
+        if let icon  =  aDecoder.decodeObject(forKey:"weather_icon") as? String? {
+            self.icon = icon
+        }
+        
+        if let tempratureF  =  aDecoder.decodeObject(forKey:"weather_tempratureF") as? Double? {
+            self.tempratureF = tempratureF
+        }
+        
+        if let pressure =  aDecoder.decodeObject(forKey:"weather_pressure") as? Int? {
+            self.pressure = pressure
+        }
+        
+        if let rain =  aDecoder.decodeObject(forKey:"weather_rain") as? Float? {
+            self.rain = rain
+        }
+        
+        if let speed =  aDecoder.decodeObject(forKey:"weather_speed") as? Float? {
+            self.speed = speed
+        }
+        
+        if let direction =  aDecoder.decodeObject(forKey:"weather_direction") as? Double {
+            self.direction = direction
+        }
+        
+        if let cloud =  aDecoder.decodeObject(forKey:"weather_cloud") as? Float {
+            self.cloud = cloud
+        }
+        
+        if let country =  aDecoder.decodeObject(forKey:"weather_country") as? String? {
+            self.country = country
+        }
+        
+        if let latitude  =  aDecoder.decodeObject(forKey:"weather_latitude") as? Float? {
+            self.latitude = latitude
+        }
+        
+        if let longitutde = aDecoder.decodeObject(forKey:"weather_longitutde") as? Float? {
+            self.longitutde = longitutde
+        }
+        
+        if let city = aDecoder.decodeObject(forKey:"weather_city") as? String? {
+            self.city = city
+        }
+        
+        if let date = aDecoder.decodeObject(forKey:"weather_date") as? Date? {
+            self.date = date
+        }
+        
+        if let weekDay = aDecoder.decodeObject(forKey:"weather_weekDay") as? String {
+            self.weekDay = weekDay
+        }
+    }
+
+    
+    //MARK:- Data Storage
+    func addOrUpdateUserData(){
         let ref = Database.database().reference()
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         let usersReference = ref.child("device").child(deviceID)
@@ -143,7 +245,6 @@ class WeatherModel: BaseModel {
     }
     
     func getWindDirectionInGeographicalDirection() -> String {
-        
         guard let direction = self.direction else {
             return "----"
         }
@@ -176,26 +277,32 @@ class WeatherModel: BaseModel {
         let calender = NSCalendar.current
         let correspondingDate = calender.date(byAdding: dayComponent, to: Date())
         self.date = correspondingDate
-        self.weekDay = correspondingDate?.dayOfWeek()
     }
     
-    func setWeatherConditionIcon(){
+    func getDayOfWeek() -> String {
+        if let date = self.date {
+            return date.dayOfWeek() ?? "N.A"
+        }
+        else{
+            return "N.A"
+        }
+    }
+    
+    func getWeatherConditionIcon() -> UIImage {
         
         //Default image
         let defaultImage = #imageLiteral(resourceName: "Sun_Big")
         
         //case no icon returned
         guard let icon = icon else {
-            self.iconImage = defaultImage
-            return
+            return defaultImage
         }
         
         //case couldn't map image
         guard let iconName = WeatherConditionImageMapper[icon] else {
-            self.iconImage = defaultImage
-            return
+            return defaultImage
         }
         
-        self.iconImage = UIImage(named: iconName) ?? defaultImage
+        return UIImage(named: iconName) ?? defaultImage
     }
 }

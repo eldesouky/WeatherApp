@@ -8,6 +8,10 @@
 
 import CoreLocation
 
+protocol LocationServiceDelegate: class {
+    func locationDidUpdate(location: CLLocation)
+}
+
 class LocationService: NSObject, CLLocationManagerDelegate {
     
     var locationManager: CLLocationManager!

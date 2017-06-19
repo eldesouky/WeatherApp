@@ -10,6 +10,11 @@ import Foundation
 import CoreLocation
 import ObjectMapper
 
+protocol WeatherServiceDelegate: class {
+    func weatherDidUpdate(weather: WeatherModel)
+    func forecastDidUpdate(forecastList: [WeatherModel])
+    func forecastDidFailToUpdate()
+}
 
 class WeatherService: NSObject {
     
@@ -54,14 +59,15 @@ class WeatherService: NSObject {
     func getForecastForLocation(lat: Float, lon: Float, daysCount: Int) {
         
         APIService.getForecastDataForLocation(lat: lat, lon: lon, daysCount: daysCount) { (forecastList, success) in
-        
-            print(success)
             if success {
                 if let forecastList = forecastList {
                     self.setupForecastDates(forecastList: forecastList)
                     self.delegate?.forecastDidUpdate(forecastList: forecastList)
                     return
                 }
+            }
+            else {
+                self.delegate?.forecastDidFailToUpdate()
             }
         }
     }

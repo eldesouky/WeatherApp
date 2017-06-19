@@ -9,8 +9,29 @@
 import Foundation
 import CoreLocation
 
-class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate {
+/* 
+ Service Manager manages the weather services, location service, storing data to Firebase, caching data in UserDefaults
+ 
+ */
+
+protocol ServicesManagerSubscriberDelegate {
+    var subscribedServices: [(NotificationIdentifiers, Selector)] { get set }
+    func Observe(services: [(NotificationIdentifiers, Selector)])
+    func unObserve(services: [(NotificationIdentifiers, Selector)])
+}
+
+protocol ServicesManagerWeatherDelegate {
+    func weatherDidUpdate(notification: Notification)
+}
+
+protocol ServicesManagerForecastDelegate {
+    func forecastDidUpdate(notification: Notification)
+    func forecastDidFailToUpdate(notification: Notification)
     
+}
+
+class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate {
+
     static var shared: ServicesManager = {
         let shared = ServicesManager()
         return shared
@@ -30,70 +51,113 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     }
     
     func startMainService(){
-      
         self.locationService.getGPSLocation()
-        
     }
     
-    //MARK:- WeatherServiceDelegate
+    //MARK:- LocationServiceDelegate
     
     func locationDidUpdate(location: CLLocation){
         self.weatherService.getWeatherServicesForLocation(location: location)
     }
     
-    
     //MARK:- WeatherServiceDelegate
 
     func weatherDidUpdate(weather: WeatherModel) {
         
-        if self.weatherData?.longitutde != weather.longitutde || self.weatherData?.latitude != weather.latitude || self.weatherData?.tempratureC != weather.tempratureC {
+        if isWeatherDataChanged(weather: weather){
             weather.addOrUpdateUserData()
         }
         
         self.weatherData = weather
+        self.weatherData?.cacheWeather()
+
         NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.weatherDidUpdate.rawValue), object: weather)
     }
-    
+
     func forecastDidUpdate(forecastList: [WeatherModel]) {
         self.forecastData = forecastList
+
+        ForecastListModel.cacheForecast(forecastList: forecastList)
         NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.forecastDidUpdate.rawValue), object: forecastList)
     }
     
+    func forecastDidFailToUpdate() {
+        NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.forecastDidFailToUpdate.rawValue), object: nil)
+    }
+
+    
     //MARK:- Services Request
    
-    /*  When the shared manager recieves a data request it pass the saved weather instance if found, else it fetches weather for location if found, else it fetches the location to then fetch the weather for this location and post a notification via Notification Center
+    /*  When the shared manager recieves a data request it pass the cached/saved weather instance if found, else it fetches weather for location if found, else it fetches the location to then fetch the weather for this location and post a notification via Notification Center
      */
     func requstWeatherData(completion: (_ weather: WeatherModel) -> ()){
-        if let weather = self.weatherData {
+        if let weather = self.getCurrentWeather() { //Weather data isCached/saved
             completion(weather)
         }
+        
         else {
-            if let location = currentLocation {
+            if let location = currentLocation { //Weather data notCached, but Location isCached
                 let lat: Float = Float(location.coordinate.latitude)
                 let lon: Float = Float(location.coordinate.longitude)
                 self.weatherService.getDetailedWeatherForLocation(lat: lat, lon: lon)
             }
-            else {
+            else {//Weather data notCached and Location notCached
                 self.locationService.getGPSLocation()
             }
         }
     }
     
     func requstForecastData(completion: (_ forecastList: [WeatherModel]) -> ()){
-        if let forecastList = self.forecastData {
+        if let forecastList = self.getCurrentForecast(){ //Forecast data isCached/saved
             completion(forecastList)
         }
         else {
-            if let location = currentLocation {
+            if let location = currentLocation { //Forecast data notCached, but Location isCached
                 let lat: Float = Float(location.coordinate.latitude)
                 let lon: Float = Float(location.coordinate.longitude)
                 self.weatherService.getForecastForLocation(lat: lat, lon: lon, daysCount: 7)
             }
-            else {
+            else { //Forecast data notCached and Location notCached
                 self.locationService.getGPSLocation()
             }
         }
 
     }
     
+    //MARK:- Cache
+    
+    func getCurrentWeather() -> WeatherModel? {
+        if let weather = self.weatherData {
+            return weather
+        }
+        else if let weather = WeatherModel.getCachedWeather() {
+            return weather
+        }
+        else {
+            return nil
+        }
+    }
+    
+    func getCurrentForecast() -> [WeatherModel]? {
+        if let forecast = self.forecastData {
+            return forecast
+        }
+        else if let forecast = ForecastListModel.getCachedForecast() {
+            return forecast
+        }
+        else {
+            return nil
+        }
+    }
+
+    //MARK:- Helper Method
+    func isWeatherDataChanged(weather: WeatherModel) -> Bool{
+       
+        if self.weatherData?.longitutde != weather.longitutde || self.weatherData?.latitude != weather.latitude || self.weatherData?.tempratureC != weather.tempratureC {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 }

@@ -38,22 +38,22 @@
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpk-CU-KzA">
-                        <rect key="frame" x="81" y="23" width="286" height="55"/>
+                        <rect key="frame" x="81" y="22.5" width="286" height="55"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Monday" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sea-Kn-OyI">
-                                <rect key="frame" x="0.0" y="5" width="65" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-------" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sea-Kn-OyI">
+                                <rect key="frame" x="0.0" y="5" width="38" height="18"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="18"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sunny" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sq5-dN-JBj">
-                                <rect key="frame" x="0.0" y="28" width="41" height="15"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="------" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sq5-dN-JBj">
+                                <rect key="frame" x="0.0" y="28" width="27" height="15"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="15"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22°" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="52" translatesAutoresizingMaskIntoConstraints="NO" id="9db-n7-ZAZ">
-                                <rect key="frame" x="206" y="0.0" width="80" height="55"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--°" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="52" translatesAutoresizingMaskIntoConstraints="NO" id="9db-n7-ZAZ">
+                                <rect key="frame" x="237" y="0.0" width="49" height="55"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Light" family="Proxima Nova" pointSize="55"/>
                                 <color key="textColor" red="0.18431372549019609" green="0.56862745098039214" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -70,6 +70,13 @@
                             <constraint firstAttribute="trailing" secondItem="9db-n7-ZAZ" secondAttribute="trailing" id="dzh-Ps-g3E"/>
                         </constraints>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djj-t4-7hU">
+                        <rect key="frame" x="81" y="98.5" width="294" height="1"/>
+                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="Jm4-cW-YAf"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="dpk-CU-KzA" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="1kc-cz-9xb"/>
@@ -77,6 +84,9 @@
                     <constraint firstItem="dpk-CU-KzA" firstAttribute="leading" secondItem="mYR-ME-BF6" secondAttribute="trailing" constant="15" id="9Vg-IG-hb8"/>
                     <constraint firstItem="mYR-ME-BF6" firstAttribute="centerY" secondItem="dpk-CU-KzA" secondAttribute="centerY" id="X07-Yt-BKs"/>
                     <constraint firstItem="mYR-ME-BF6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="6" id="cNl-FX-pMi"/>
+                    <constraint firstAttribute="bottom" secondItem="djj-t4-7hU" secondAttribute="bottom" id="daV-zG-SCY"/>
+                    <constraint firstItem="djj-t4-7hU" firstAttribute="leading" secondItem="dpk-CU-KzA" secondAttribute="leading" id="idU-wq-G1X"/>
+                    <constraint firstAttribute="trailing" secondItem="djj-t4-7hU" secondAttribute="trailing" id="lag-mp-aad"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

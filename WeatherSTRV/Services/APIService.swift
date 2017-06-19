@@ -31,7 +31,6 @@ class APIService: NSObject {
             if success {
                 if let weather = Mapper<WeatherModel>().map(JSONString: result!)
                 {
-                    print(weather)
                     completion(weather, true)
                     return
                 }
@@ -50,14 +49,14 @@ class APIService: NSObject {
             if success {
                 if let forecastList = Mapper<ForecastListModel>().map(JSONString: result!)
                 {
-                    print((forecastList.records?.first?.mainDescription)! + "=======lat=\(lat)&lon=\(lon)")
+                    print("lat=\(lat)&lon=\(lon)")
                     completion(forecastList.records, true)
                     return
                 }
-                
-                //failed to fetch forecast
-                completion(nil, false)
             }
+            //failed to fetch forecast
+            completion(nil, false)
+
         }
     }
     
@@ -82,16 +81,9 @@ class APIService: NSObject {
                     completion(response.result.value, "Success", true)
                 }
                 else {
-                    self.connectionError(response.result.value, statusCode: statusCode)
-                    
+                    completion(nil, "Failed", true)
                 }
             }
         }
     }
-    
-    static func connectionError(_ message:String?, statusCode:Int?) {
-        //missing
-    }
 }
-
-

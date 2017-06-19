@@ -15,4 +15,6 @@ enum ViewIdentifier: String {
 enum NotificationIdentifiers: String {
     case weatherDidUpdate = "weatherDidUpdate"
     case forecastDidUpdate = "forecastDidUpdate"
+    case forecastDidFailToUpdate = "forecastDidFailToUpdate"
+
 }
