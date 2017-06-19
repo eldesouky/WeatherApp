@@ -12,16 +12,14 @@ import Alamofire
 import ObjectMapper
 
 
-
 class APIService: NSObject {
     
     // MARK:- API Props
-    static let WeatherServiceAppId        :String         = "b9a606bcf58b96058b40c4f645d0a568"
-    static let baseURL          :String         = "http://api.openweathermap.org/data/2.5/"
-    fileprivate static let alamoFireManager  = Alamofire.SessionManager.default
+    static let WeatherServiceAppId          :String          = "b9a606bcf58b96058b40c4f645d0a568"
+    static let baseURL                      :String          = "http://api.openweathermap.org/data/2.5/"
+    fileprivate static let alamoFireManager :SessionManager  = Alamofire.SessionManager.default
     
     
-
     // MARK:- Weather API Services
     static func getWeatherDataForLocation(lat: Float, lon: Float, completion: @escaping (_ weather: WeatherModel?, _ success: Bool) -> ()){
     
@@ -87,3 +85,4 @@ class APIService: NSObject {
         }
     }
 }
+

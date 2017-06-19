@@ -17,6 +17,12 @@ target 'WeatherSTRV' do
     pod 'ObjectMapper', '~> 2.2'
     
     # EmptyDataSet
-    pod 'DZNEmptyDataSet', '~> 1.8.1'
+    pod 'DZNEmptyDataSet', '~> 1.8'
 
+    # Header Message for reachability
+    pod 'SwiftMessages', '~> 3.3'
+    
+    pod 'ReachabilitySwift', '~> 3'
+
+    
 end

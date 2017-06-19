@@ -14,29 +14,29 @@ import CoreLocation
  
  */
 
+// MARK:- ServicesManagerSubscriberDelegate
 protocol ServicesManagerSubscriberDelegate {
     var subscribedServices: [(NotificationIdentifiers, Selector)] { get set }
     func Observe(services: [(NotificationIdentifiers, Selector)])
     func unObserve(services: [(NotificationIdentifiers, Selector)])
 }
 
+// MARK:- ServicesManagerWeatherDelegate
 protocol ServicesManagerWeatherDelegate {
     func weatherDidUpdate(notification: Notification)
 }
 
+// MARK:- ServicesManagerForecastDelegate
 protocol ServicesManagerForecastDelegate {
     func forecastDidUpdate(notification: Notification)
     func forecastDidFailToUpdate(notification: Notification)
     
 }
 
+// MARK:- 
 class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate {
 
-    static var shared: ServicesManager = {
-        let shared = ServicesManager()
-        return shared
-    }()
-    
+    //MARK:- Variables
     var locationService: LocationService!
     var weatherService: WeatherService!
     
@@ -44,12 +44,20 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     private var forecastData: [WeatherModel]?
     private var currentLocation: CLLocation?
     
+    static var shared: ServicesManager = {
+        let shared = ServicesManager()
+        return shared
+    }()
+    
+    //MARK:- init
      override init() { //This prevents others from using the default '()' initializer for this class.
         super.init()
         self.locationService = LocationService(delegate: self)
         self.weatherService = WeatherService(appid: "", delegate: self)
     }
     
+    
+    //MARK:- Services
     func startMainService(){
         self.locationService.getGPSLocation()
     }
@@ -84,7 +92,6 @@ class ServicesManager: NSObject, LocationServiceDelegate, WeatherServiceDelegate
     func forecastDidFailToUpdate() {
         NotificationCenter.default.post(name: Notification.Name(NotificationIdentifiers.forecastDidFailToUpdate.rawValue), object: nil)
     }
-
     
     //MARK:- Services Request
    

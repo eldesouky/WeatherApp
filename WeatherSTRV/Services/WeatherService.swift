@@ -10,25 +10,27 @@ import Foundation
 import CoreLocation
 import ObjectMapper
 
+//MARK:- WeatherServiceDelegate
 protocol WeatherServiceDelegate: class {
     func weatherDidUpdate(weather: WeatherModel)
     func forecastDidUpdate(forecastList: [WeatherModel])
     func forecastDidFailToUpdate()
 }
 
+//MARK:-
 class WeatherService: NSObject {
     
-    // Set your appid
+    //MARK:- Variables
     let appid: String
     weak var delegate: WeatherServiceDelegate?
     
+    //MARK:- init
     init(appid: String, delegate: WeatherServiceDelegate) {
         self.appid = appid
         self.delegate = delegate
     }
     
-
-    
+    //MARK:- Weather Services
     func getWeatherServicesForLocation(location: CLLocation?){
         guard let location = location else {
             return
@@ -39,9 +41,7 @@ class WeatherService: NSObject {
 
         getDetailedWeatherForLocation(lat: lat, lon: lon)
         getForecastForLocation(lat: lat, lon: lon, daysCount: 7)
-        
     }
-    
     
     func getDetailedWeatherForLocation(lat: Float, lon: Float) {
         
@@ -72,7 +72,7 @@ class WeatherService: NSObject {
         }
     }
     
-    
+    //MARK:- Helper Methods
     func setupForecastDates(forecastList: [WeatherModel]){
 
         for index in 0...forecastList.count - 1 {

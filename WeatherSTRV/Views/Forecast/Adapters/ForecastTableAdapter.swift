@@ -55,6 +55,10 @@ class ForecastTableAdapter: NSObject, UITableViewDelegate, UITableViewDataSource
         return 92
     }
     
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
     //MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

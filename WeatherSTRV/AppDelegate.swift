@@ -8,16 +8,22 @@
 
 import UIKit
 import Firebase
+import SwiftMessages
+import ReachabilitySwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    //MARK:- Variables
     var window: UIWindow?
-
+    fileprivate let reachabilityURL  :String           = "www.google.com"
+    var isReachable                  :Bool             = false
+    var reachability                 : Reachability?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        setupReachability()
         return true
     }
 
@@ -38,13 +44,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         ServicesManager.shared.startMainService()
-
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
+    //MARK:- Reachability
+    private func setupReachability() {
+        let reachability = Reachability(hostname: reachabilityURL)
+        self.reachability = reachability
+        
+        reachability?.whenReachable = { reachability in
+            ServicesManager.shared.startMainService()
+            DispatchQueue.main.async {
+                self.networkConnection(isWorking: true, message: "")
+            }
+        }
+        reachability?.whenUnreachable = { reachability in
+            DispatchQueue.main.async {
+                self.networkConnection(isWorking: false, message: "No Internet! Connect to get latest weather updates")
+                
+            }
+        }
+        self.startNotifier()
+    }
+    
+    private func startNotifier() {
+        do {
+            try reachability?.startNotifier()
+        } catch {
+            return
+        }
+    }
+    
+    private func stopNotifier() {
+        reachability?.stopNotifier()
+        reachability = nil
+    }
+    
+    private func networkConnection(isWorking:Bool, message:String) {
+        if isWorking {
+            DispatchQueue.main.async {
+                SwiftMessages.sharedInstance.hideAll()
+            }
+            return
+        }
+        let status = MessageView.viewFromNib(layout: .StatusLine)
+        status.backgroundView.backgroundColor = UIColor.red
+        status.bodyLabel?.textColor = UIColor.white
+        status.configureContent(body: message)
+        var statusConfig = SwiftMessages.defaultConfig
+        statusConfig.presentationContext = .window(windowLevel: UIWindowLevelStatusBar)
+        statusConfig.duration = .forever
+        DispatchQueue.main.async {
+            SwiftMessages.show(config: statusConfig, view: status)
+        }
+    }
 }
 

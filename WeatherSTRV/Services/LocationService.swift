@@ -8,23 +8,27 @@
 
 import CoreLocation
 
+// MARK:- LocationServiceDelegate
 protocol LocationServiceDelegate: class {
     func locationDidUpdate(location: CLLocation)
 }
 
+// MARK:-
 class LocationService: NSObject, CLLocationManagerDelegate {
     
+    // MARK:- Variables
     var locationManager: CLLocationManager!
     var locationUpdate:((CLLocation)->())?
     weak var delegate: LocationServiceDelegate?
     
+    // MARK:- init
     init(delegate: LocationServiceDelegate) {
         
         super.init()
         self.delegate = delegate
     }
     
-    // MARK: Location
+    // MARK:- Location Services
     /** Get the GPS location.  */
     func getGPSLocation() {
         setupLocationManager()

@@ -36,7 +36,7 @@ class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDele
     //MARK: Share View
     @IBOutlet weak var shareButton: UIButton!
     
-    //MARK:-Variables
+    //MARK:- Variables
     var subscribedServices = [
         (NotificationIdentifiers.weatherDidUpdate, #selector(SingleDayViewController.weatherDidUpdate(notification:)))
     ]
@@ -92,7 +92,7 @@ class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDele
         DispatchQueue.main.async { [weak self] in
             self?.shareButton.loadingIndicator(show: true)
         }
-        //showSharingActivity()
+        showSharingActivity()
     }
     
     func setupDataFor(weather: WeatherModel){
@@ -150,6 +150,7 @@ class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDele
 
         let activityViewController = UIActivityViewController(activityItems: [self.getSharablePhoto()], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        activityViewController.excludedActivityTypes = [.addToReadingList, .assignToContact]
         
         // present the view controller
         DispatchQueue.main.async { [weak self] in
@@ -160,8 +161,7 @@ class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDele
     
     func getSharablePhoto()->UIImage{
         self.shareButton.isHidden = true //Remove share button from screenshot
-        let screenSize = UIScreen.main.bounds.size
-        let renderer = UIGraphicsImageRenderer(size: screenSize)
+        let renderer = UIGraphicsImageRenderer(size: self.view.bounds.size)
 
         let image = renderer.image { ctx in
             self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
@@ -172,7 +172,6 @@ class SingleDayViewController: BaseViewController, ServicesManagerSubscriberDele
     
     //MARK: UIActivityItemSource
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any?{
-        return getSharablePhoto()
+        return [getSharablePhoto()]
     }
-
 }

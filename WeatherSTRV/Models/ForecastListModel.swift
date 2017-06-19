@@ -11,8 +11,10 @@ import ObjectMapper
 
 class ForecastListModel: BaseModel {
     
+    // MARK:- Variables
     var records:[WeatherModel]? = []
 
+    // MARK:- Map
     override func mapping(map: Map) {
         records <- map["list"]
     }
