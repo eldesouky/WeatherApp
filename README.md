@@ -7,9 +7,7 @@ In order for a view controller to use the ServicesManager services, it has to:
 
 Moreover, the subscribed vc can request an on demand get weather or forecast data without waiting for the notification to be automatically triggered.
 
-
-Around 20 hours of development
-All requirements have been implemented. Wanted to do a lot more, which I had time.
+All requirements have been implemented.
 
 Thanks
 Cheers,
